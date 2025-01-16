@@ -9,19 +9,19 @@ import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 
 // Router
-import router from './router'; // Importando o Vue Router
+import router from './router';
 
 // Components
 import App from './App.vue';
 
-// Criar Vuetify
+// Creating Vuetify
 const vuetify = createVuetify({
   components,
   directives,
 });
 
-// Criando e montando a aplicação Vue
+// CCreating and mouting app
 createApp(App)
-  .use(vuetify)   // Registrando Vuetify
-  .use(router)    // Registrando o Vue Router
+  .use(vuetify)   //  Vuetify
+  .use(router)    //  Vue Router
   .mount('#app');

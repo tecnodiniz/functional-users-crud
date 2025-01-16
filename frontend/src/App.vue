@@ -1,5 +1,5 @@
 <template>
-    <router-view></router-view> <!-- Onde as rotas vão ser renderizadas -->
+    <router-view></router-view> 
 </template>
 
 <script>

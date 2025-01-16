@@ -204,8 +204,8 @@ import { get_user, update_user } from '@/services/api';
           },
           password: "",
         },
-        availableRoles: ["admin", "manager", "tester"], // Papéis disponíveis
-        timezones: Intl.supportedValuesOf("timeZone"), // Lista de timezones disponíveis
+        availableRoles: ["admin", "manager", "tester"], 
+        timezones: Intl.supportedValuesOf("timeZone"), 
       };
     },
     created(){
@@ -222,7 +222,7 @@ import { get_user, update_user } from '@/services/api';
         const payload = {
           username: this.form.username,
           roles: this.form.roles,
-          active: this.form.active === "true", // Converte string para boolean
+          active: this.form.active === "true", 
           password: this.form.password,
           preferences: {
             timezone: this.form.preferences.timezone,

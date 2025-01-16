@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomePage from '../views/HomePage.vue'; // Exemplo de importação de uma página
-import UserDetailPage from '../views/UserDetailPage.vue'; // Exemplo de importação de uma página
+import HomePage from '../views/HomePage.vue'; 
+import UserDetailPage from '../views/UserDetailPage.vue'; 
 
 const routes = [
   {
@@ -12,13 +12,13 @@ const routes = [
     path: '/user/:id',
     name: 'UserDetail',
     component: UserDetailPage,
-    props: true, // Permite passar parâmetros para o componente
+    props: true, 
   },
 ];
 
 const router = createRouter({
-  history: createWebHistory(), // Usando o histórico de navegação com hash
-  routes, // Registrando as rotas
+  history: createWebHistory(), 
+  routes, 
 });
 
 export default router;

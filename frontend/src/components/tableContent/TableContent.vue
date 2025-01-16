@@ -97,7 +97,7 @@ export default {
 
       },
       formatDate(timestamp) {
-      const date = new Date(timestamp * 1000); // Converte para milissegundos
+      const date = new Date(timestamp * 1000); 
       const options = {
         year: 'numeric',
         month: '2-digit',
@@ -107,7 +107,7 @@ export default {
         hour12: true,
       };
 
-      return date.toLocaleDateString('en-US', options); // Formato dos EUA
+      return date.toLocaleDateString('en-US', options); // US Format
     },
     }
 }

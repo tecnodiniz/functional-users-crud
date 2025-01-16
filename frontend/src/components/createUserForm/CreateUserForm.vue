@@ -100,14 +100,14 @@
         form: {
           username: "",
           roles: [],
-          active: "true", // Será convertido para booleano no envio
+          active: "true", 
           preferences: {
             timezone: "",
           },
           password: "",
         },
-        availableRoles: ["admin", "manager", "tester"], // Papéis disponíveis
-        timezones: Intl.supportedValuesOf("timeZone"), // Lista de timezones disponíveis
+        availableRoles: ["admin", "manager", "tester"], 
+        timezones: Intl.supportedValuesOf("timeZone"), 
       };
     },
     methods: {
@@ -115,7 +115,7 @@
         const payload = {
           username: this.form.username,
           roles: this.form.roles,
-          active: this.form.active === "true", // Converte string para boolean
+          active: this.form.active === "true", 
           password: this.form.password,
           preferences: {
             timezone: this.form.preferences.timezone,
@@ -129,7 +129,7 @@
           this.form = {
           username: "",
           roles: [],
-          active: "true", // Valor padrão
+          active: "true", 
           preferences: {
             timezone: "",
           },
