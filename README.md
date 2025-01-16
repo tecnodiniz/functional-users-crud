@@ -45,7 +45,7 @@ This project is a full-stack web application for managing users, built with Flas
 ### 1. Clone the Repository
 
 ```bash
-git clone git@github.com:tecnodiniz/functional-users-crud.git
+git clone https://github.com/tecnodiniz/functional-users-crud.git
 cd project
 ```
 
