@@ -2,15 +2,15 @@
   <v-dialog v-model="dialog" max-width="600" persistent>
     <template v-slot:activator="{ props: activatorProps }">
       <v-btn
-        class="text-none font-weight-regular ma-4"
-        color="indigo"
-        prepend-icon="mdi-plus-circle"
+        class="text-none font-weight-regular"
+        icon="mdi-pencil-box"
+        variant="plain"
         text="Add User"
         v-bind="activatorProps"
       ></v-btn>
     </template>
 
-    <v-card prepend-icon="mdi-account" title="New User">
+    <v-card prepend-icon="mdi-account" title="Edit User">
       <v-card-text>
         <v-form v-model="form.valid">
           <v-row dense>
@@ -83,7 +83,7 @@
         <v-btn
           :disabled="!form.valid"
           color="primary"
-          text="Create"
+          text="Update"
           variant="tonal"
           @click="emitUser"
         ></v-btn>
@@ -93,10 +93,39 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 const dialog = ref(false)
 
-const emit = defineEmits(['new-user'])
+const props = defineProps({
+  user: {
+    username: '',
+    roles: {
+      type: Array,
+      require: true,
+    },
+    active: false,
+    password: '',
+    preferences: {
+      timezone: '',
+    },
+  },
+})
+
+onMounted(() => {
+  form.value.username = props.user.username
+  form.value.password = props.user.password
+
+  if (Array.isArray(props.user.roles)) {
+    form.value.roles = [...props.user.roles]
+  } else {
+    form.value.roles = []
+  }
+
+  form.value.active = props.user.active
+  form.value.preferences = props.user.preferences
+})
+
+const emit = defineEmits(['edit-user'])
 const availableRoles = ref(['admin', 'manager', 'tester'])
 const timezones = ref(Intl.supportedValuesOf('timeZone'))
 const form = ref({
@@ -126,15 +155,15 @@ const form = ref({
 const emitUser = () => {
   if (form.value.valid) {
     const payload = {
+      _id: props.user._id,
       username: form.value.username,
-      roles: form.value.roles,
+      roles: [...form.value.roles],
       active: form.value.active,
       password: form.value.password,
       preferences: {
         timezone: form.value.preferences.timezone,
       },
     }
-
     dialog.value = false
 
     form.value.username = ''
@@ -144,7 +173,7 @@ const emitUser = () => {
     form.value.active = false
     form.value.preferences.timezone = ''
 
-    emit('new-user', payload)
+    emit('edit-user', payload)
   }
 }
 </script>

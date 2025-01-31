@@ -13,7 +13,9 @@
     </thead>
     <tbody>
       <tr v-for="user in users" :key="user._id">
-        <td>{{ user.username }}</td>
+        <td>
+          <RouterLink :to="`/user/${user._id}`">{{ user.username }}</RouterLink>
+        </td>
 
         <!-- Roles -->
         <td>
@@ -30,11 +32,7 @@
 
         <td>
           <div class="d-flex">
-            <v-btn
-              icon="mdi-pencil-box"
-              variant="plain"
-              @click="emit('edit-user', user._id)"
-            ></v-btn>
+            <EditUserFormComponent :user="user" @edit-user="emitUser" />
             <v-btn
               icon="mdi-delete-circle"
               variant="plain"
@@ -48,6 +46,8 @@
 </template>
 
 <script setup>
+import EditUserFormComponent from './EditUserFormComponent.vue'
+
 defineProps({
   users: {
     type: Array,
@@ -68,5 +68,9 @@ const formatDate = (timestamp) => {
   }
 
   return date.toLocaleDateString('en-US', options) // US Format
+}
+
+const emitUser = (payload) => {
+  emit('edit-user', payload)
 }
 </script>

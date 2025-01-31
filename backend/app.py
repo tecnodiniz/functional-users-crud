@@ -45,7 +45,7 @@ def create_user():
 
         users_collection.insert_one(data)
 
-        return jsonify({"message": "User created"}), 201
+        return jsonify({"msg": "User created"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
@@ -83,11 +83,13 @@ def update_user(id):
         if not ObjectId(id):
             return jsonify({"error": "Invalid ID"}), 400
         data = request.json
+       
 
         if not data:
             return jsonify({"msg": "No data entered for update"}), 400
         
         data["updated_ts"] = float(int(time.time()))
+        print(data)
         result = users_collection.update_one({"_id": ObjectId(id)}, {"$set": data})
 
         if result.matched_count == 0:
@@ -95,7 +97,7 @@ def update_user(id):
         
         return jsonify({"msg": "User updated"}), 200
     except Exception as e:
-        jsonify({"error": str(e)}), 500
+      return jsonify({"error": str(e)}), 500
 
 # DELETE    
 @app.route("/users/<id>", methods=["DELETE"])
