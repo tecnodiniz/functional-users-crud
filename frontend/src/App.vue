@@ -1,29 +1,9 @@
-<template>
-    <router-view></router-view> 
-</template>
-
-<script>
-
-
-
-export default {
-  name: 'App',
-  components: {
-  }
-}
+<script setup>
+import HomeView from './views/HomeView.vue'
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  margin-top: 60px;
-  color: white;
-}
-
-body{
-  background-color: #2c3e50;
-}
-</style>
+<template>
+  <v-container>
+    <HomeView />
+  </v-container>
+</template>
