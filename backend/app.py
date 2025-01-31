@@ -35,7 +35,7 @@ def page_not_found(e):
 
 
 # CREATE
-@app.route("/users", methods=["POST"])
+@app.route("/users/new", methods=["POST"])
 def create_user():
     try:
         data = request.json
