@@ -1,5 +1,5 @@
 <template>
-  <v-table height="100vh" fixed-header>
+  <v-table height="400px" fixed-header>
     <thead>
       <tr>
         <th class="text-center">Username</th>

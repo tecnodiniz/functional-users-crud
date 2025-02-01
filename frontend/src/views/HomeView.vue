@@ -2,7 +2,7 @@
   <v-row>
     <v-col class="text-center">
       <UserFormComponent @new-user="createUser" />
-      <UserTableComponent :users="users" @delete-user="deleteUser" @edit-user="editUser" />
+      <UserTableComponent :users="users" @delete-user="handleDelete" @edit-user="handleEdit" />
 
       <DialogComponet :dialog="dialog" :text="d_text" :title="d_title" @close="dialog = false" />
 
@@ -13,7 +13,7 @@
         :title="d_title"
         @close="confirm = false"
         @confirm="updateUser"
-        @confirm-delete="confirmDelete"
+        @confirm-delete="deleteUser"
       />
     </v-col>
   </v-row>
@@ -40,61 +40,51 @@ onMounted(() => {
   getUsers()
 })
 
-const createUser = async (payload) => {
-  try {
-    const response = await new_user(payload)
-    if (response.data) {
+const createUser = (payload) => {
+  new_user(payload)
+    .then((response) => {
       d_text.value = response.data.msg
       d_title.value = 'Message'
       dialog.value = true
       getUsers()
-    }
-  } catch (error) {
-    handleError(error)
-  }
+    })
+    .catch((error) => errorHandler(error))
 }
 const getUsers = async () => {
-  try {
-    const result = await get_users()
-
-    if (result.data) users.value.splice(0, users.value.length, ...result.data)
-  } catch (error) {
-    console.log(error)
-  }
+  get_users()
+    .then((response) => users.value.splice(0, users.value.length, ...response.data))
+    .catch((error) => errorHandler(error))
 }
-const editUser = (payload) => {
+
+const handleEdit = (payload) => {
   user.value = payload
   d_text.value = 'Update confirm'
   d_title.value = 'Confirm action'
   confirm.value = true
   dialog.value = false
 }
-const updateUser = async () => {
-  try {
-    const id = user.value._id
-    delete user.value._id
+const updateUser = () => {
+  const id = user.value._id
+  delete user.value._id
 
-    const response = await update_user(id, user.value)
-
-    if (response.data) {
+  update_user(id, user.value)
+    .then((response) => {
       d_text.value = response.data.msg
       d_title.value = 'Message'
       dialog.value = true
       confirm.value = false
 
       getUsers()
-    }
-  } catch (error) {
-    handleError(error)
-  }
+    })
+    .catch((error) => errorHandler(error))
 }
-const handleError = (error) => {
+const errorHandler = (error) => {
   d_text.value = error.message
   d_title.value = 'Error'
   dialog.value = true
 }
 
-const deleteUser = (id) => {
+const handleDelete = (id) => {
   user.value = id
   d_text.value = 'Delete confirm'
   d_title.value = 'Confirm action'
@@ -103,22 +93,15 @@ const deleteUser = (id) => {
   delUser.value = true
 }
 
-const confirmDelete = async () => {
-  try {
-    const response = await user_delete(user.value)
-
-    if (response.data) {
-      d_text.value = response.data.msg
-      d_title.value = 'Message'
-      dialog.value = true
-      confirm.value = false
-      delUser.value = false
-
-      getUsers()
-    }
-  } catch (error) {
-    handleError(error)
+const deleteUser = () => {
+  user_delete(user.value).then((response) => {
+    d_text.value = response.data.msg
+    d_title.value = 'Message'
+    dialog.value = true
+    confirm.value = false
     delUser.value = false
-  }
+
+    getUsers()
+  })
 }
 </script>

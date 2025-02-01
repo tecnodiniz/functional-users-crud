@@ -26,13 +26,14 @@
   </v-card>
 
   <DialogComponet :dialog="dialog" :text="d_text" :title="d_title" @close="dialog = false" />
+
   <ConfirmDialogComponent
     :dialog="confirm"
     :del="delUser"
     text="Delete user?"
     title="Confirm"
     @close="confirm = false"
-    @confirm-delete="confirmDelete"
+    @confirm-delete="deleteUser"
   />
 </template>
 
@@ -57,12 +58,9 @@ onMounted(() => {
 })
 
 const getUser = async (id) => {
-  try {
-    const result = await get_user(id)
-    if (result.data) user.value = result.data.user
-  } catch (error) {
-    console.log(error)
-  }
+  get_user(id)
+    .then((response) => (user.value = response.data.user))
+    .catch((error) => console.log(error))
 }
 
 const formatDate = (timestamp) => {
@@ -84,11 +82,9 @@ const handleDelete = () => {
   confirm.value = true
 }
 
-const confirmDelete = async () => {
-  try {
-    const response = await user_delete(route.params.id)
-
-    if (response.data) {
+const deleteUser = async () => {
+  user_delete(route.params.id)
+    .then((response) => {
       d_text.value = response.data.msg
       d_title.value = 'Message'
       dialog.value = true
@@ -98,11 +94,12 @@ const confirmDelete = async () => {
       setTimeout(() => {
         location.href = '/'
       }, 2500)
-    }
-  } catch (error) {
-    d_text.value = error.message
-    d_title.value = 'Error'
-    dialog.value = true
-  }
+    })
+    .catch((error) => {
+      console.log(error)
+      d_text.value = error.message
+      d_title.value = 'Error'
+      dialog.value = true
+    })
 }
 </script>

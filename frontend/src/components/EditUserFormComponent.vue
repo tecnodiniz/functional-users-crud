@@ -20,7 +20,7 @@
                 hint="User Name"
                 label="User Name*"
                 required
-                :rules="[form.rule.nameRules]"
+                :rules="[rules.nameRules]"
               ></v-text-field>
             </v-col>
             <v-col cols="12" sm="6">
@@ -29,7 +29,7 @@
                 label="Password*"
                 type="password"
                 required
-                :rules="[form.rule.pwdRules]"
+                :rules="[rules.pwdRules]"
                 @keyup.enter="emitUser"
               ></v-text-field>
             </v-col>
@@ -39,7 +39,7 @@
                 :items="timezones"
                 label="Timezone*"
                 v-model="form.preferences.timezone"
-                :rules="[form.rule.required]"
+                :rules="[rules.required]"
               >
               </v-select>
             </v-col>
@@ -112,17 +112,15 @@ const props = defineProps({
 })
 
 onMounted(() => {
-  form.value.username = props.user.username
-  form.value.password = props.user.password
+  form.value = setForm(props.user)
+})
 
-  if (Array.isArray(props.user.roles)) {
-    form.value.roles = [...props.user.roles]
-  } else {
-    form.value.roles = []
-  }
-
-  form.value.active = props.user.active
-  form.value.preferences = props.user.preferences
+const setForm = (user) => ({
+  username: user.username,
+  password: user.password,
+  roles: [...user.roles],
+  active: user.active,
+  preferences: { timezone: user.preferences?.timezone },
 })
 
 const emit = defineEmits(['edit-user'])
@@ -137,43 +135,50 @@ const form = ref({
   preferences: {
     timezone: '',
   },
-  rule: {
-    nameRules: (value) => {
-      if (!value) return 'Name is required'
-      if (value?.length < 2) return 'Name must have at least 2 caracters'
-      return true
-    },
-    pwdRules: (value) => {
-      if (!value) return 'Password is required'
-      if (value?.length < 6) return 'Name must have at least 6 caracters'
-      return true
-    },
-    required: (v) => !!v || 'Field is required',
+})
+
+const rules = ref({
+  nameRules: (value) => {
+    if (!value) return 'Name is required'
+    if (value?.length < 2) return 'Name must have at least 2 caracters'
+    return true
   },
+  pwdRules: (value) => {
+    if (!value) return 'Password is required'
+    if (value?.length < 6) return 'Name must have at least 6 caracters'
+    return true
+  },
+  required: (v) => !!v || 'Field is required',
 })
 
 const emitUser = () => {
-  if (form.value.valid) {
-    const payload = {
-      _id: props.user._id,
-      username: form.value.username,
-      roles: [...form.value.roles],
-      active: form.value.active,
-      password: form.value.password,
-      preferences: {
-        timezone: form.value.preferences.timezone,
-      },
-    }
-    dialog.value = false
+  const payload = form.value.valid ? createPayload(form.value) : null
 
-    form.value.username = ''
-    form.value.login = ''
-    form.value.password = ''
-    form.value.roles = []
-    form.value.active = false
-    form.value.preferences.timezone = ''
+  dialog.value = false
+  emit('edit-user', payload)
+  resetForm()
+}
 
-    emit('edit-user', payload)
-  }
+const createPayload = ({ username, roles, active, password, preferences }) => ({
+  _id: props.user._id,
+  username,
+  roles,
+  active,
+  password,
+  preferences: {
+    timezone: preferences?.timezone,
+  },
+})
+
+const defaultForm = () => ({
+  username: '',
+  password: '',
+  roles: [],
+  active: false,
+  preferences: { timezone: '' },
+})
+
+const resetForm = () => {
+  form.value = defaultForm()
 }
 </script>
